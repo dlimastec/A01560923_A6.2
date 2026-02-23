@@ -80,3 +80,26 @@ def get_hotel(hotel_id, file_path=DATA_FILE):
             return hotel
 
     return None
+
+def update_hotel(hotel_id, name=None, total_rooms=None, file_path=DATA_FILE):
+    if name is not None:
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("name must be a non-empty string")
+
+    if total_rooms is not None:
+        if not isinstance(total_rooms, int) or total_rooms <= 0:
+            raise ValueError("total_rooms must be a positive integer")
+
+    hotels = load_hotels(file_path)
+
+    for hotel in hotels:
+        if hotel.get("hotel_id") == hotel_id:
+            if name is not None:
+                hotel["name"] = name.strip()
+            if total_rooms is not None:
+                hotel["total_rooms"] = total_rooms
+
+            save_hotels(hotels, file_path)
+            return True
+
+    return False

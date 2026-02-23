@@ -4,6 +4,7 @@ import unittest
 from src.hotel import Hotel, create_hotel, load_hotels
 from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel
 from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel, get_hotel
+from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel, get_hotel, update_hotel
 
 
 class TestHotelPersistence(unittest.TestCase):
@@ -66,6 +67,28 @@ class TestHotelPersistence(unittest.TestCase):
 
         hotel = get_hotel(999, self.temp_file)
         self.assertIsNone(hotel)
+
+    def test_update_hotel_updates_data(self):
+        create_hotel(Hotel(7, "OldHotel", 5), self.temp_file)
+
+        updated = update_hotel(7, name="NewHotel", total_rooms=20, file_path=self.temp_file)
+        self.assertTrue(updated)
+
+        hotel = get_hotel(7, self.temp_file)
+        self.assertEqual("NewHotel", hotel["name"])
+        self.assertEqual(20, hotel["total_rooms"])
+
+    def test_update_hotel_returns_false_if_not_found(self):
+        create_hotel(Hotel(7, "OldHotel", 5), self.temp_file)
+
+        updated = update_hotel(999, name="X", file_path=self.temp_file)
+        self.assertFalse(updated)
+
+    def test_update_hotel_raises_valueerror_invalid_rooms(self):
+        create_hotel(Hotel(7, "OldHotel", 5), self.temp_file)
+
+        with self.assertRaises(ValueError):
+            update_hotel(7, total_rooms=-5, file_path=self.temp_file)
 
 
 if __name__ == "__main__":
