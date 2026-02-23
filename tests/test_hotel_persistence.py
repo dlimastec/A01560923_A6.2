@@ -1,10 +1,14 @@
 import os
 import unittest
 
-from src.hotel import Hotel, create_hotel, load_hotels
-from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel
-from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel, get_hotel
-from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel, get_hotel, update_hotel
+from src.hotel import (
+    Hotel,
+    create_hotel,
+    delete_hotel,
+    get_hotel,
+    load_hotels,
+    update_hotel,
+)
 
 
 class TestHotelPersistence(unittest.TestCase):
@@ -71,7 +75,9 @@ class TestHotelPersistence(unittest.TestCase):
     def test_update_hotel_updates_data(self):
         create_hotel(Hotel(7, "OldHotel", 5), self.temp_file)
 
-        updated = update_hotel(7, name="NewHotel", total_rooms=20, file_path=self.temp_file)
+        updated = update_hotel(
+            7, name="NewHotel", total_rooms=20, file_path=self.temp_file
+        )
         self.assertTrue(updated)
 
         hotel = get_hotel(7, self.temp_file)

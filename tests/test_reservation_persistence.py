@@ -1,7 +1,6 @@
 import os
 import unittest
 
-from src.reservation import Reservation, create_reservation, load_reservations
 from src.reservation import (
     Reservation,
     cancel_reservation,

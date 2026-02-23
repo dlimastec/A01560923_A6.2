@@ -1,3 +1,7 @@
+import json
+import os
+
+
 class Customer:
     def __init__(self, customer_id, name, email):
         if not isinstance(customer_id, int) or customer_id <= 0:
@@ -14,10 +18,9 @@ class Customer:
         self.email = email.strip()
 
     def display(self):
-        return f"Customer ID: {self.customer_id}, Name: {self.name}, Email: {self.email}"
+        return f"Customer ID: {
+            self.customer_id}, Name: {self.name}, Email: {self.email}"
 
-import json
-import os
 
 DATA_FILE = "data/customers.json"
 
@@ -55,6 +58,7 @@ def create_customer(customer, file_path=DATA_FILE):
     customers.append(customer_dict)
     save_customers(customers, file_path)
 
+
 def delete_customer(customer_id, file_path=DATA_FILE):
     customers = load_customers(file_path)
 
@@ -66,6 +70,7 @@ def delete_customer(customer_id, file_path=DATA_FILE):
     save_customers(updated, file_path)
     return True
 
+
 def get_customer(customer_id, file_path=DATA_FILE):
     customers = load_customers(file_path)
 
@@ -75,7 +80,9 @@ def get_customer(customer_id, file_path=DATA_FILE):
 
     return None
 
-def update_customer(customer_id, name=None, email=None, file_path=DATA_FILE):
+
+def update_customer(
+        customer_id, name=None, email=None, file_path=DATA_FILE):
     if name is not None:
         if not isinstance(name, str) or not name.strip():
             raise ValueError("name must be a non-empty string")

@@ -1,15 +1,6 @@
-import json
 import os
 import unittest
-from src.customer import Customer, create_customer, delete_customer, load_customers
-from src.customer import Customer, create_customer, load_customers
-from src.customer import (
-    Customer,
-    create_customer,
-    delete_customer,
-    get_customer,
-    load_customers,
-)
+
 from src.customer import (
     Customer,
     create_customer,
@@ -84,7 +75,9 @@ class TestCustomerPersistence(unittest.TestCase):
     def test_update_customer_updates_name_and_email(self):
         create_customer(Customer(7, "Old", "old@old.com"), self.temp_file)
 
-        updated = update_customer(7, name="New", email="new@new.com", file_path=self.temp_file)
+        updated = update_customer(
+            7, name="New", email="new@new.com", file_path=self.temp_file
+        )
         self.assertTrue(updated)
 
         customer = get_customer(7, self.temp_file)
@@ -106,4 +99,3 @@ class TestCustomerPersistence(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    save_customers(customers, file_path)

@@ -3,7 +3,6 @@ import os
 from src.reservation import Reservation, create_reservation
 from src.reservation import cancel_reservation, load_reservations
 
-
 DATA_FILE = "data/hotels.json"
 
 
@@ -24,7 +23,9 @@ class Hotel:
 
     def display(self):
         return (
-            f"Hotel ID: {self.hotel_id}, Name: {self.name}, Total Rooms: {self.total_rooms}"
+            f"Hotel ID: {self.hotel_id}, "
+            f"Name: {self.name}, "
+            f"Total Rooms: {self.total_rooms}"
         )
 
 
@@ -64,6 +65,7 @@ def create_hotel(hotel, file_path=DATA_FILE):
     hotels.append(hotel_dict)
     save_hotels(hotels, file_path)
 
+
 def delete_hotel(hotel_id, file_path=DATA_FILE):
     hotels = load_hotels(file_path)
 
@@ -75,6 +77,7 @@ def delete_hotel(hotel_id, file_path=DATA_FILE):
     save_hotels(updated, file_path)
     return True
 
+
 def get_hotel(hotel_id, file_path=DATA_FILE):
     hotels = load_hotels(file_path)
 
@@ -83,6 +86,7 @@ def get_hotel(hotel_id, file_path=DATA_FILE):
             return hotel
 
     return None
+
 
 def update_hotel(hotel_id, name=None, total_rooms=None, file_path=DATA_FILE):
     if name is not None:
@@ -107,8 +111,10 @@ def update_hotel(hotel_id, name=None, total_rooms=None, file_path=DATA_FILE):
 
     return False
 
+
 def reserve_room(reservation_id, customer_id, hotel_id,
-                 hotels_file_path=DATA_FILE, reservations_file_path="data/reservations.json"):
+                 hotels_file_path=DATA_FILE,
+                 reservations_file_path="data/reservations.json"):
     hotels = load_hotels(hotels_file_path)
 
     for hotel in hotels:
@@ -132,10 +138,11 @@ def reserve_room(reservation_id, customer_id, hotel_id,
     print("ERROR: Hotel not found.")
     return False
 
+
 def cancel_hotel_reservation(
-    reservation_id,
-    hotels_file_path=DATA_FILE,
-    reservations_file_path="data/reservations.json",
+        reservation_id,
+        hotels_file_path=DATA_FILE,
+        reservations_file_path="data/reservations.json",
 ):
     reservations = load_reservations(reservations_file_path)
 
