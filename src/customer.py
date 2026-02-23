@@ -65,3 +65,12 @@ def delete_customer(customer_id, file_path=DATA_FILE):
 
     save_customers(updated, file_path)
     return True
+
+def get_customer(customer_id, file_path=DATA_FILE):
+    customers = load_customers(file_path)
+
+    for customer in customers:
+        if customer.get("customer_id") == customer_id:
+            return customer
+
+    return None

@@ -4,6 +4,13 @@ import unittest
 from src.customer import Customer, create_customer, delete_customer, load_customers
 
 from src.customer import Customer, create_customer, load_customers
+from src.customer import (
+    Customer,
+    create_customer,
+    delete_customer,
+    get_customer,
+    load_customers,
+)
 
 
 class TestCustomerPersistence(unittest.TestCase):
@@ -52,6 +59,20 @@ class TestCustomerPersistence(unittest.TestCase):
 
         data = load_customers(self.temp_file)
         self.assertEqual(1, len(data))
+
+    def test_get_customer_returns_customer_if_found(self):
+        create_customer(Customer(5, "Eva", "eva@eva.com"), self.temp_file)
+
+        customer = get_customer(5, self.temp_file)
+        self.assertIsNotNone(customer)
+        self.assertEqual(5, customer["customer_id"])
+        self.assertEqual("Eva", customer["name"])
+
+    def test_get_customer_returns_none_if_not_found(self):
+        create_customer(Customer(5, "Eva", "eva@eva.com"), self.temp_file)
+
+        customer = get_customer(999, self.temp_file)
+        self.assertIsNone(customer)
 
 
 if __name__ == "__main__":
