@@ -54,3 +54,14 @@ def create_customer(customer, file_path=DATA_FILE):
 
     customers.append(customer_dict)
     save_customers(customers, file_path)
+
+def delete_customer(customer_id, file_path=DATA_FILE):
+    customers = load_customers(file_path)
+
+    updated = [c for c in customers if c.get("customer_id") != customer_id]
+
+    if len(updated) == len(customers):
+        return False
+
+    save_customers(updated, file_path)
+    return True

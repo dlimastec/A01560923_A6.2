@@ -1,6 +1,7 @@
 import json
 import os
 import unittest
+from src.customer import Customer, create_customer, delete_customer, load_customers
 
 from src.customer import Customer, create_customer, load_customers
 
@@ -31,6 +32,26 @@ class TestCustomerPersistence(unittest.TestCase):
 
         data = load_customers(self.temp_file)
         self.assertEqual([], data)
+
+    def test_delete_customer_removes_from_file(self):
+        create_customer(Customer(1, "A", "a@a.com"), self.temp_file)
+        create_customer(Customer(2, "B", "b@b.com"), self.temp_file)
+
+        deleted = delete_customer(1, self.temp_file)
+        self.assertTrue(deleted)
+
+        data = load_customers(self.temp_file)
+        self.assertEqual(1, len(data))
+        self.assertEqual(2, data[0]["customer_id"])
+
+    def test_delete_customer_returns_false_if_not_found(self):
+        create_customer(Customer(1, "A", "a@a.com"), self.temp_file)
+
+        deleted = delete_customer(999, self.temp_file)
+        self.assertFalse(deleted)
+
+        data = load_customers(self.temp_file)
+        self.assertEqual(1, len(data))
 
 
 if __name__ == "__main__":
