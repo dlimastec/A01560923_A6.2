@@ -2,7 +2,6 @@ import json
 import os
 import unittest
 from src.customer import Customer, create_customer, delete_customer, load_customers
-
 from src.customer import Customer, create_customer, load_customers
 from src.customer import (
     Customer,
@@ -10,6 +9,14 @@ from src.customer import (
     delete_customer,
     get_customer,
     load_customers,
+)
+from src.customer import (
+    Customer,
+    create_customer,
+    delete_customer,
+    get_customer,
+    load_customers,
+    update_customer,
 )
 
 
@@ -73,6 +80,28 @@ class TestCustomerPersistence(unittest.TestCase):
 
         customer = get_customer(999, self.temp_file)
         self.assertIsNone(customer)
+
+    def test_update_customer_updates_name_and_email(self):
+        create_customer(Customer(7, "Old", "old@old.com"), self.temp_file)
+
+        updated = update_customer(7, name="New", email="new@new.com", file_path=self.temp_file)
+        self.assertTrue(updated)
+
+        customer = get_customer(7, self.temp_file)
+        self.assertEqual("New", customer["name"])
+        self.assertEqual("new@new.com", customer["email"])
+
+    def test_update_customer_returns_false_if_not_found(self):
+        create_customer(Customer(7, "Old", "old@old.com"), self.temp_file)
+
+        updated = update_customer(999, name="New", file_path=self.temp_file)
+        self.assertFalse(updated)
+
+    def test_update_customer_raises_valueerror_on_invalid_email(self):
+        create_customer(Customer(7, "Old", "old@old.com"), self.temp_file)
+
+        with self.assertRaises(ValueError):
+            update_customer(7, email="invalid-email", file_path=self.temp_file)
 
 
 if __name__ == "__main__":

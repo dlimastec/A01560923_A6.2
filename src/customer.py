@@ -74,3 +74,26 @@ def get_customer(customer_id, file_path=DATA_FILE):
             return customer
 
     return None
+
+def update_customer(customer_id, name=None, email=None, file_path=DATA_FILE):
+    if name is not None:
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("name must be a non-empty string")
+
+    if email is not None:
+        if not isinstance(email, str) or "@" not in email or not email.strip():
+            raise ValueError("email must be a valid email string")
+
+    customers = load_customers(file_path)
+
+    for customer in customers:
+        if customer.get("customer_id") == customer_id:
+            if name is not None:
+                customer["name"] = name.strip()
+            if email is not None:
+                customer["email"] = email.strip()
+
+            save_customers(customers, file_path)
+            return True
+
+    return False
