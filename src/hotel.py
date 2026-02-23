@@ -60,3 +60,14 @@ def create_hotel(hotel, file_path=DATA_FILE):
 
     hotels.append(hotel_dict)
     save_hotels(hotels, file_path)
+
+def delete_hotel(hotel_id, file_path=DATA_FILE):
+    hotels = load_hotels(file_path)
+
+    updated = [h for h in hotels if h.get("hotel_id") != hotel_id]
+
+    if len(updated) == len(hotels):
+        return False
+
+    save_hotels(updated, file_path)
+    return True
