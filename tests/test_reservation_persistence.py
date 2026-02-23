@@ -2,6 +2,12 @@ import os
 import unittest
 
 from src.reservation import Reservation, create_reservation, load_reservations
+from src.reservation import (
+    Reservation,
+    cancel_reservation,
+    create_reservation,
+    load_reservations,
+)
 
 
 class TestReservationPersistence(unittest.TestCase):
@@ -30,6 +36,26 @@ class TestReservationPersistence(unittest.TestCase):
 
         data = load_reservations(self.temp_file)
         self.assertEqual([], data)
+
+    def test_cancel_reservation_removes_from_file(self):
+        create_reservation(Reservation(1, 10, 20), self.temp_file)
+        create_reservation(Reservation(2, 11, 21), self.temp_file)
+
+        cancelled = cancel_reservation(1, self.temp_file)
+        self.assertTrue(cancelled)
+
+        data = load_reservations(self.temp_file)
+        self.assertEqual(1, len(data))
+        self.assertEqual(2, data[0]["reservation_id"])
+
+    def test_cancel_reservation_returns_false_if_not_found(self):
+        create_reservation(Reservation(1, 10, 20), self.temp_file)
+
+        cancelled = cancel_reservation(999, self.temp_file)
+        self.assertFalse(cancelled)
+
+        data = load_reservations(self.temp_file)
+        self.assertEqual(1, len(data))
 
 
 if __name__ == "__main__":

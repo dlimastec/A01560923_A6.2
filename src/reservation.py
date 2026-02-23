@@ -61,3 +61,14 @@ def create_reservation(reservation, file_path=DATA_FILE):
 
     reservations.append(reservation_dict)
     save_reservations(reservations, file_path)
+
+def cancel_reservation(reservation_id, file_path=DATA_FILE):
+    reservations = load_reservations(file_path)
+
+    updated = [r for r in reservations if r.get("reservation_id") != reservation_id]
+
+    if len(updated) == len(reservations):
+        return False
+
+    save_reservations(updated, file_path)
+    return True
