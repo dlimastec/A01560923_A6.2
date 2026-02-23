@@ -71,3 +71,12 @@ def delete_hotel(hotel_id, file_path=DATA_FILE):
 
     save_hotels(updated, file_path)
     return True
+
+def get_hotel(hotel_id, file_path=DATA_FILE):
+    hotels = load_hotels(file_path)
+
+    for hotel in hotels:
+        if hotel.get("hotel_id") == hotel_id:
+            return hotel
+
+    return None

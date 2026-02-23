@@ -3,6 +3,7 @@ import unittest
 
 from src.hotel import Hotel, create_hotel, load_hotels
 from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel
+from src.hotel import Hotel, create_hotel, load_hotels, delete_hotel, get_hotel
 
 
 class TestHotelPersistence(unittest.TestCase):
@@ -51,6 +52,20 @@ class TestHotelPersistence(unittest.TestCase):
 
         data = load_hotels(self.temp_file)
         self.assertEqual(1, len(data))
+
+    def test_get_hotel_returns_hotel_if_found(self):
+        create_hotel(Hotel(5, "Hilton", 10), self.temp_file)
+
+        hotel = get_hotel(5, self.temp_file)
+        self.assertIsNotNone(hotel)
+        self.assertEqual(5, hotel["hotel_id"])
+        self.assertEqual("Hilton", hotel["name"])
+
+    def test_get_hotel_returns_none_if_not_found(self):
+        create_hotel(Hotel(5, "Hilton", 10), self.temp_file)
+
+        hotel = get_hotel(999, self.temp_file)
+        self.assertIsNone(hotel)
 
 
 if __name__ == "__main__":
