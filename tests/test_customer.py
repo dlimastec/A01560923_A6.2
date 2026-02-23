@@ -15,6 +15,26 @@ class TestCustomer(unittest.TestCase):
         expected = "Customer ID: 2, Name: Ana, Email: ana@example.com"
         self.assertEqual(expected, customer.display())
 
+    def test_customer_id_must_be_positive(self):
+        with self.assertRaises(ValueError):
+            Customer(0, "David", "david@example.com")
+
+    def test_customer_id_must_be_int(self):
+        with self.assertRaises(ValueError):
+            Customer("1", "David", "david@example.com")
+
+    def test_name_cannot_be_empty(self):
+        with self.assertRaises(ValueError):
+            Customer(1, "", "david@example.com")
+
+    def test_name_cannot_be_spaces(self):
+        with self.assertRaises(ValueError):
+            Customer(1, "   ", "david@example.com")
+
+    def test_email_must_contain_at(self):
+        with self.assertRaises(ValueError):
+            Customer(1, "David", "david.example.com")
+
 
 if __name__ == "__main__":
     unittest.main()
