@@ -1,6 +1,7 @@
 import json
 import os
 from src.reservation import Reservation, create_reservation
+from src.reservation import cancel_reservation, load_reservations
 
 
 DATA_FILE = "data/hotels.json"
@@ -129,4 +130,37 @@ def reserve_room(reservation_id, customer_id, hotel_id,
             return True
 
     print("ERROR: Hotel not found.")
+    return False
+
+def cancel_hotel_reservation(
+    reservation_id,
+    hotels_file_path=DATA_FILE,
+    reservations_file_path="data/reservations.json",
+):
+    reservations = load_reservations(reservations_file_path)
+
+    hotel_id = None
+    for r in reservations:
+        if r.get("reservation_id") == reservation_id:
+            hotel_id = r.get("hotel_id")
+            break
+
+    if hotel_id is None:
+        print("ERROR: Reservation not found.")
+        return False
+
+    cancelled = cancel_reservation(reservation_id, reservations_file_path)
+    if not cancelled:
+        return False
+
+    hotels = load_hotels(hotels_file_path)
+    for h in hotels:
+        if h.get("hotel_id") == hotel_id:
+            reserved = h.get("reserved_rooms", 0)
+            if reserved > 0:
+                h["reserved_rooms"] = reserved - 1
+            save_hotels(hotels, hotels_file_path)
+            return True
+
+    print("ERROR: Hotel not found for reservation.")
     return False

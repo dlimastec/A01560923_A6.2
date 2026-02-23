@@ -3,6 +3,7 @@ import unittest
 
 from src.hotel import Hotel, create_hotel, reserve_room
 from src.reservation import load_reservations
+from src.hotel import Hotel, create_hotel, reserve_room, cancel_hotel_reservation, load_hotels
 
 
 class TestHotelReservation(unittest.TestCase):
@@ -45,6 +46,27 @@ class TestHotelReservation(unittest.TestCase):
 
         self.assertTrue(ok1)
         self.assertFalse(ok2)
+
+    def test_cancel_hotel_reservation_removes_reservation_and_decrements_reserved(self):
+        create_hotel(Hotel(1, "H1", 2), self.hotels_file)
+
+        ok = reserve_room(200, 10, 1, self.hotels_file, self.res_file)
+        self.assertTrue(ok)
+
+        cancelled = cancel_hotel_reservation(200, self.hotels_file, self.res_file)
+        self.assertTrue(cancelled)
+
+        reservations = load_reservations(self.res_file)
+        self.assertEqual([], reservations)
+
+        hotels = load_hotels(self.hotels_file)
+        self.assertEqual(0, hotels[0].get("reserved_rooms", 0))
+
+    def test_cancel_hotel_reservation_returns_false_if_reservation_not_found(self):
+        create_hotel(Hotel(1, "H1", 2), self.hotels_file)
+
+        cancelled = cancel_hotel_reservation(999, self.hotels_file, self.res_file)
+        self.assertFalse(cancelled)
 
 
 if __name__ == "__main__":
