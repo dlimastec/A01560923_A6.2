@@ -1,5 +1,6 @@
 import json
 import os
+from src.reservation import Reservation, create_reservation
 
 
 DATA_FILE = "data/hotels.json"
@@ -56,6 +57,7 @@ def create_hotel(hotel, file_path=DATA_FILE):
         "hotel_id": hotel.hotel_id,
         "name": hotel.name,
         "total_rooms": hotel.total_rooms,
+        "reserved_rooms": 0,
     }
 
     hotels.append(hotel_dict)
@@ -102,4 +104,29 @@ def update_hotel(hotel_id, name=None, total_rooms=None, file_path=DATA_FILE):
             save_hotels(hotels, file_path)
             return True
 
+    return False
+
+def reserve_room(reservation_id, customer_id, hotel_id,
+                 hotels_file_path=DATA_FILE, reservations_file_path="data/reservations.json"):
+    hotels = load_hotels(hotels_file_path)
+
+    for hotel in hotels:
+        if hotel.get("hotel_id") == hotel_id:
+            reserved = hotel.get("reserved_rooms", 0)
+            total = hotel.get("total_rooms", 0)
+
+            if reserved >= total:
+                print("ERROR: No rooms available.")
+                return False
+
+            # Increment reserved rooms
+            hotel["reserved_rooms"] = reserved + 1
+            save_hotels(hotels, hotels_file_path)
+
+            # Create reservation record
+            reservation = Reservation(reservation_id, customer_id, hotel_id)
+            create_reservation(reservation, reservations_file_path)
+            return True
+
+    print("ERROR: Hotel not found.")
     return False
